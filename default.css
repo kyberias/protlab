@@ -1,0 +1,45 @@
+﻿body
+{
+}
+
+.tabrow {
+    clear: both;
+    float:left;
+}
+
+.tabitem {
+    margin: 15px;
+    width: 140px;
+    height: 35px;
+    text-align: center;
+
+    background-color: aliceblue;
+    cursor: pointer;
+    float: left;
+}
+
+.selectedtab {
+    background-color: #00ff21;
+}
+
+.tab {
+    clear:both;
+}
+
+.buttonrow {
+    float:left;
+}
+
+.actionbutton {
+    float:left;
+    margin: 10px;
+}
+
+.canvas {
+    clear:both;
+    float:left;
+}
+
+h4 {
+    clear:both;
+}

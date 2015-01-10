@@ -1,0 +1,137 @@
+﻿<!DOCTYPE html>
+
+<html ng-app>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="ui.js"></script>
+    <script src="sdspage.js"></script>
+    <link href="default.css" type="text/css" rel="stylesheet">
+    <script src="solutions.js"></script>
+
+    <script src="http://code.angularjs.org/angular-1.0.0rc3.min.js"></script>
+    <script src="http://documentcloud.github.com/underscore/underscore-min.js"></script>
+    <script src="script/Filesaver.min.js"></script>
+
+</head>
+<body>
+
+    <h2>Virtual Protein Lab</h2>
+
+    <div class="tabrow">
+        <div id="solutions_ti" class="tabitem">Solutions</div>
+        <div id="precipitation_ti" class="tabitem">Precipitation</div>
+        <div class="tabitem">Chromatography</div>
+        <div class="tabitem">SDS-PAGE</div>
+        <div id="sdspage2d_ti" class="tabitem">2D SDS-PAGE</div>
+    </div>
+
+    <div id="tabs" class="tabs" ng-controller="SolutionsCtrl">
+
+
+        <div id="solutions_tab" class="tab">
+
+            <div>
+
+                <div class="buttonrow">
+                    <button class="actionbutton" id="" ng-click="createNewSolution()">New...</button>
+                    <button class="actionbutton" id="" ng-click="saveSolutionsAs()">Save</button>
+                    <input class="actionbutton" ng-model="uploadedFile"
+                           onchange="angular.element(this).scope().fileChanged()"
+                           type="file" accept=".json" id="fileInput" />
+                </div>
+
+                <h4>Solutions</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Volume</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tr ng-repeat="solution in solutions">
+                        <td>{{solution.code}}</td>
+                        <td>{{solution.volume}}</td>
+                        <td>{{solution.description}}</td>
+                    </tr>
+                </table>
+
+                <div ng-show="newVisible">
+                    <h2>New solution</h2>
+                    <form ng-submit="saveNewSolution()">
+                        <table border="0">
+                            <tr>
+                                <td>Description</td>
+                                <td><input type="text" ng-model="newSolution.code" required /></td>
+                                <td><input type="text" ng-model="newSolution.description" required /></td>
+                                <td><input type="number" ng-model="newSolution.volume" required /></td>
+                            </tr>
+                        </table>
+
+                        <h3>Solubles (proteins)</h3>
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>c (M)</th>
+                                    <th>mW</th>
+                                    <th>pI</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="soluble in newSolution.solubles">
+                                    <td><input type="text" ng-model="soluble.name" required /></td>
+                                    <td><input type="text" ng-model="soluble.c" required /></td>
+                                    <td><input type="text" ng-model="soluble.mW" required /></td>
+                                    <td><input type="text" ng-model="soluble.pI" required /></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <button class="actionbutton" id="" ng-click="createNewSoluble()">New soluble</button>
+
+                        <button type="submit">Save</button>
+                        <button type="button" ng-click="cancelNewSolution()">Cancel</button>
+                    </form>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div id="precipitation_tab" class="tab">
+
+            <form ng-submit="startPrecipitation()">
+                <p>
+                    Solution to salt:
+                    <select ng-options="item.code for item in solutions" ng-model="selectedPrecSolution" required></select>
+                </p>
+
+                <p>
+                    Salt concentration: <input type="number" ng-model="saltConcentration" required />
+                </p>
+
+                <button class="actionbutton" type="submit">Start</button>
+
+            </form>
+        </div>
+
+        <div id="sdspage2d_tab" class="tab">
+
+            <div class="buttonrow">
+                <button class="actionbutton" id="start_sdspage2d">Start</button>
+            </div>
+
+            <canvas class="canvas" id="pageCanvas" width="640" height="480" style="border: 1px; border-color: blue; border-style: solid; background-color: #eeeeff"></canvas>
+        </div>
+
+    </div>
+
+<script>
+</script>
+
+</body>
+</html>
