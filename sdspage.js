@@ -16,16 +16,21 @@ function resetPositions(prots, lane) {
 
 var ctx;
 
-function drawBlot(ctx, x, y, rad) {
+function drawBlot(ctx, x, y, rad, color) {
     var grd = ctx.createRadialGradient(x, y, rad, x, y, 1);
 
     //console.log('createRadialGradient ' + x + ' ' + y + ' ' + rad)
 
     var bias = 180;
 
+    if(color)
+    {
+    grd.addColorStop(0, "rgba(" + color + ", 0)");
+    grd.addColorStop(1, "rgba(" + color + ", 0.2)");
+    } else {
     grd.addColorStop(0, "rgba(" + bias + ", " + bias + ", 255, 0)");
     grd.addColorStop(1, "rgba(" + bias + ", " + bias + ", 255, 0.2)");
-
+    }
     //grd.addColorStop(0, "transparent");
     //grd.addColorStop(1, "blue");
 
@@ -36,22 +41,21 @@ function drawBlot(ctx, x, y, rad) {
     //console.log('fillRect' + (x-rad) + ' ' + (y-rad) + ' ' + rad*2 + ' ' + rad*2)
 }
 
-var protsToRender;
-
 var runInterval;
 
-function renderSDSPAGE(canvas) {
+function renderSDSPAGE(canvas, prots, completion) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     var stopRun = false;
 
     // apply voltage force and move proteins
-    for (var i = 0; i < protsToRender.length; i++) {
-        var prot = protsToRender[i];
+    for (var i = 0; i < prots.length; i++) {
+        var prot = prots[i];
 
-        prot.y += (0.09 * 100 - 0.09 * prot.kW);
+        var a = 10.0 / prot.mW;
+        prot.y += a;//(0.04 * 100 - 0.01 * prot.mW);
 
-        drawBlot(ctx, prot.x, prot.y, 5);
+        drawBlot(ctx, prot.x, prot.y, 5, prot.stain);
 
         if (prot.y >= (canvas.height - 30)) {
             // Stop when proteins start to run out of the gel
@@ -61,7 +65,7 @@ function renderSDSPAGE(canvas) {
 
     if (stopRun) {
         clearInterval(runInterval);
-        run2DPAGE(canvas, protsToRender);
+        completion();
     }
 }
 
@@ -73,10 +77,12 @@ function chargeInPh(pI, pH) {
     return pI - pH;
 }
 
-function render2DPAGE(canvas, prots) {
+function render2DPAGE(canvas, prots, completion) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     var stopRun = false;
+
+    var largestMove = 0;
 
     // apply voltage force and move proteins
     for (var i = 0; i < prots.length; i++) {
@@ -85,9 +91,14 @@ function render2DPAGE(canvas, prots) {
         var pH = calcpH(4, 10, prot.x, canvas.width);
         var charge = chargeInPh(prot.pI, pH);
 
-        prot.x += (0.9 * charge);
+        var movex = (0.9 * charge);
+        prot.x += movex;
+        movex = Math.abs(movex);
+        if(movex > largestMove) {
+            largestMove = movex;
+        }
 
-        drawBlot(ctx, prot.x, prot.y, 5);
+        drawBlot(ctx, prot.x, prot.y, 5, prot.stain);
 
         if (prot.x >= (canvas.width - 30)) {
             // Stop when proteins start to run out of the gel
@@ -95,58 +106,51 @@ function render2DPAGE(canvas, prots) {
         }
     }
 
-    if (stopRun) {
+    if (stopRun || largestMove < 0.5) {
         clearInterval(runInterval);
+        completion();
     }
 }
 
-function run2DPAGE(canvas, prots) {
-    runInterval = setInterval(render2DPAGE, 50, canvas, prots);
-}
-
-function runSDSPAGE(canvas) {
-    var prots = createProteins();
-
-    resetPositions(prots, 1);
-
-    protsToRender = prots;
-    runInterval = setInterval(renderSDSPAGE, 50, canvas);
-}
-
-
-
-function generateProtsWithWeightAndpI(name, howmany, pI, kW) {
+function generateProtsWithWeightAndpI(name, howmany, pI, mW, stain) {
     var prots = [];
 
     for (var i = 0; i < howmany; i++) {
         var prot = {
             name: name,
             pI: pI + normalDist() * 0.03,
-            kW: kW + 0.05 * normalDist()
+            mW: mW,// + 0.05 * normalDist(),
+            stain: stain
         };
         prots.push(prot);
     }
     return prots;
 }
 
-function createProteins() {
-    var num = 100;
+function start2DPAGE(canvas, solutes, completion) {
+    var prots = [];
 
-    all = [];
-    all = all.concat(generateProtsWithWeightAndpI('A', num, 6.5, 12));
-    all = all.concat(generateProtsWithWeightAndpI('B', num, 9.3, 23.5));
-    all = all.concat(generateProtsWithWeightAndpI('C', num, 8.0, 43.5));
-    all = all.concat(generateProtsWithWeightAndpI('D', num, 5.5, 77));
-    all = all.concat(generateProtsWithWeightAndpI('1', num, 7.2, 7));
-    all = all.concat(generateProtsWithWeightAndpI('2', num, 6.5, 17));
-    all = all.concat(generateProtsWithWeightAndpI('3', num, 7.5, 27));
-    all = all.concat(generateProtsWithWeightAndpI('4', num, 4.5, 37.5));
-    all = all.concat(generateProtsWithWeightAndpI('5', num, 9.1, 50));
-    all = all.concat(generateProtsWithWeightAndpI('6', num, 7.5, 32.5));
+    var num=100;
 
-    return all;
+    for(var i = 0;i<solutes.length;i++) {
+        var solute = solutes[i];
+        prots = prots.concat(generateProtsWithWeightAndpI('foobar', num, solute.pI, solute.mW, solute.color));
+    }
+
+    resetPositions(prots, 1);
+    protsToRender = prots;
+    runInterval = setInterval(renderSDSPAGE, 50, canvas, prots, function() {
+        runInterval = setInterval(render2DPAGE, 50, canvas, prots, completion);
+    });
+//    runInterval = setInterval(render2DPAGE, 50, canvas, prots);
 }
 
+function runSDSPAGE(canvas, prots, completion) {
+    resetPositions(prots, 1);
+
+    protsToRender = prots;
+    runInterval = setInterval(renderSDSPAGE, 50, canvas, prots, completion);
+}
 
 $(document).ready(function () {
 
@@ -157,7 +161,6 @@ $(document).ready(function () {
 
         runSDSPAGE(canvas);
         return;
-
         //drawBlot(ctx, 100, 100, 10);
 
         var targetx = 100;

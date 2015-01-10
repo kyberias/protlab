@@ -7,6 +7,7 @@
     <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
     <script src="ui.js"></script>
     <script src="sdspage.js"></script>
+    <script src="precipitation.js"></script>
     <link href="default.css" type="text/css" rel="stylesheet">
     <script src="solutions.js"></script>
 
@@ -116,22 +117,37 @@
 
                 <button class="actionbutton" type="submit">Start</button>
 
+                <table>
+                <tr>
+                <td>{{precResult1.code}}</td>
+                </tr>
+                <tr>
+                <td>{{precResult2.code}}</td>
+                </tr>
+                </table>
+
+                <button ng-show="enablePrecSave" type="button" ng-click="savePrecResults()">Save results</button>
+
             </form>
         </div>
 
         <div id="sdspage2d_tab" class="tab">
 
             <div class="buttonrow">
-                <button class="actionbutton" id="start_sdspage2d">Start</button>
+                <form ng-submit="startSDSPAGE2D()">
+                Solution to PAGE: 
+                <select ng-options="item.code for item in solutions" ng-model="selectedSDSPAGE2DSolution" required></select>
+                <button class="actionbutton">Start</button>
+                </form>
             </div>
+
+            <span ng-show="SDSPAGE2Ddone">SDS-PAGE completed</span>
 
             <canvas class="canvas" id="pageCanvas" width="640" height="480" style="border: 1px; border-color: blue; border-style: solid; background-color: #eeeeff"></canvas>
         </div>
 
     </div>
 
-<script>
-</script>
-
+<a href="https://github.com/kyberias/protlab"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/e7bbb0521b397edbd5fe43e7f760759336b5e05f/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png"></a>
 </body>
 </html>
