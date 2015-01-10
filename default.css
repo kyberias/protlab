@@ -43,3 +43,14 @@
 h4 {
     clear:both;
 }
+
+.PAGEwells {
+    width: 100%;
+    clear: both;
+    float: left;
+}
+
+.wellheader {
+    width: 100px;
+    float: left;
+}

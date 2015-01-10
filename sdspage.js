@@ -52,8 +52,15 @@ function renderSDSPAGE(canvas, prots, completion) {
     for (var i = 0; i < prots.length; i++) {
         var prot = prots[i];
 
-        var a = 10.0 / prot.mW;
-        prot.y += a;//(0.04 * 100 - 0.01 * prot.mW);
+        // Nice logaritmic scale on gel
+        var E = 300;
+        var z = -Math.log(prot.mW * 80) + 10;
+        var viscosity = 1;
+        var r = 10;// size of molecule (constant for now)
+        var f = 6 * Math.PI * viscosity * r;
+        var v = E * z / f;
+
+        prot.y += v;
 
         drawBlot(ctx, prot.x, prot.y, 5, prot.stain);
 
@@ -138,11 +145,55 @@ function start2DPAGE(canvas, solutes, completion) {
     }
 
     resetPositions(prots, 1);
-    protsToRender = prots;
     runInterval = setInterval(renderSDSPAGE, 50, canvas, prots, function() {
         runInterval = setInterval(render2DPAGE, 50, canvas, prots, completion);
     });
 //    runInterval = setInterval(render2DPAGE, 50, canvas, prots);
+}
+
+function startPAGE(canvas, solutions, completion) {
+    var prots = [];
+
+    var num = 100;
+
+    for (var s = 0; s < solutions.length; s++) {
+        var solution = solutions[s];
+        var solutes = solution.solutes;
+        var solprots = [];
+        for (var i = 0; i < solutes.length; i++) {
+            var solute = solutes[i];
+            var genprots = generateProtsWithWeightAndpI('foobar', num, solute.pI, solute.mW, solute.color);
+            solprots = solprots.concat(genprots);
+            solute.pageSol = genprots;
+        }
+        resetPositions(solprots, s + 1);
+        solution.pageProts = solprots;
+        prots = prots.concat(solprots);
+    }
+
+    runInterval = setInterval(renderSDSPAGE, 50, canvas, prots, function () {
+
+        for (var i = 0; i < solutions.length; i++)
+        {
+            if (solutions[i].standard) {
+                for(var j=0;j<solutions[i].solutes.length;j++)
+                {
+                    var solute = solutions[i].solutes[j];
+                    var y = solute.pageSol[0].y;
+
+                    var ctx = canvas.getContext("2d");
+                    ctx.fillStyle = "blue";
+                    ctx.font = "12px Arial";
+                    ctx.fillText(solute.mW, 20, y);
+
+                    solute.pageSol = null;
+                }
+            }
+            solutions[i].pageProts = null;
+        }
+
+        completion();
+    });
 }
 
 function runSDSPAGE(canvas, prots, completion) {

@@ -8,6 +8,7 @@
     <script src="ui.js"></script>
     <script src="sdspage.js"></script>
     <script src="precipitation.js"></script>
+    <script src="chroma.js"></script>
     <link href="default.css" type="text/css" rel="stylesheet">
     <script src="solutions.js"></script>
 
@@ -23,8 +24,8 @@
     <div class="tabrow">
         <div id="solutions_ti" class="tabitem">Solutions</div>
         <div id="precipitation_ti" class="tabitem">Precipitation</div>
-        <div class="tabitem">Chromatography</div>
-        <div class="tabitem">SDS-PAGE</div>
+        <div id="chroma_ti"class="tabitem">Chromatography</div>
+        <div id="sdspage_ti" class="tabitem">SDS-PAGE</div>
         <div id="sdspage2d_ti" class="tabitem">2D SDS-PAGE</div>
     </div>
 
@@ -131,6 +132,42 @@
             </form>
         </div>
 
+        <div id="chroma_tab" class="tab">
+
+            <div class="buttonrow">
+                <form ng-submit="runChroma()">
+                    Solution:
+                    <select ng-options="item.code for item in solutions" ng-model="selectedChromaSolution" required></select>
+                    Resin:
+                    <select ng-options="item.name for item in resins" ng-model="selectedResin" required></select>
+                    Buffer:
+                    <select ng-options="item.name for item in buffers" ng-model="selectedBuffer" required></select>
+                    <button class="actionbutton">Run Chromatography</button>
+                </form>
+            </div>
+
+            <span ng-show="Chromadone">Chromatography completed</span>
+
+            <canvas class="canvas" id="ChromaCanvas" width="640" height="480" style="border: 1px; border-color: black; border-style: solid; background-color: #ffffff"></canvas>
+        </div>
+
+        <div id="gelfilter_tab" class="tab">
+
+            <div class="buttonrow">
+                <form ng-submit="runGelFilter()">
+                    Solution:
+                    <select ng-options="item.code for item in solutions" ng-model="selectedGelFilterSolution" required></select>
+                    Column:
+                    <select ng-options="item.name for item in columns" ng-model="selectedColumn" required></select>
+                    <button class="actionbutton">Run Gel filtering</button>
+                </form>
+            </div>
+
+            <span ng-show="Gelfilterdone">Chromatography completed</span>
+
+            <canvas class="canvas" id="GelFilterCanvas" width="640" height="480" style="border: 1px; border-color: black; border-style: solid; background-color: #ffffff"></canvas>
+        </div>
+
         <div id="sdspage2d_tab" class="tab">
 
             <div class="buttonrow">
@@ -144,6 +181,28 @@
             <span ng-show="SDSPAGE2Ddone">SDS-PAGE completed</span>
 
             <canvas class="canvas" id="pageCanvas" width="640" height="480" style="border: 1px; border-color: blue; border-style: solid; background-color: #eeeeff"></canvas>
+        </div>
+
+        <div id="sdspage_tab" class="tab">
+
+            <div class="buttonrow">
+                <form ng-submit="addSolutionToPAGE()">
+                    Solution:
+                    <select ng-options="item.code for item in solutions" ng-model="selectedSDSPAGESolution" required></select>
+                    <button class="actionbutton">Add</button>
+                </form>
+                <button type="button" class="actionbutton" ng-click="runPAGE()">Run PAGE</button>
+            </div>
+
+            <span ng-show="SDSPAGEdone">SDS-PAGE completed</span>
+
+            <div class="PAGEwells" ng-repeat="solution in SDSPageSolutions">
+                <div class="wellheader">
+                    {{solution.code}}
+                </div>
+            </div>
+
+            <canvas class="canvas" id="SDSPAGECanvas" width="640" height="480" style="border: 1px; border-color: blue; border-style: solid; background-color: #eeeeff"></canvas>
         </div>
 
     </div>

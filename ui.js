@@ -10,9 +10,6 @@ function showTab(id) {
 $(document).ready(function () {
     showTab('solutions');
 
-    $('#sdspage2d_ti').click(function () {
-        showTab('sdspage2d');
-    });
 
     $('#solutions_ti').click(function () {
         showTab('solutions');
@@ -20,5 +17,17 @@ $(document).ready(function () {
 
     $('#precipitation_ti').click(function () {
         showTab('precipitation');
+    });
+
+    $('#chroma_ti').click(function () {
+        showTab('chroma');
+    });
+
+    $('#sdspage2d_ti').click(function () {
+        showTab('sdspage2d');
+    });
+
+    $('#sdspage_ti').click(function () {
+        showTab('sdspage');
     });
 });
