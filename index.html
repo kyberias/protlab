@@ -1,21 +1,25 @@
 ﻿<!DOCTYPE html>
 
-<html ng-app>
+<html ng-app="protlabApp">
 <head>
     <meta charset="utf-8" />
     <title>Virtual Protein Lab</title>
     <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-    <script src="ui.js"></script>
-    <script src="sdspage.js"></script>
-    <script src="precipitation.js"></script>
-    <script src="chroma.js"></script>
-    <link href="default.css" type="text/css" rel="stylesheet">
-    <script src="solutions.js"></script>
 
     <script src="http://code.angularjs.org/angular-1.0.0rc3.min.js"></script>
     <script src="http://documentcloud.github.com/underscore/underscore-min.js"></script>
     <script src="script/Filesaver.min.js"></script>
 
+    <script src="app.js"></script>
+    <script src="ui.js"></script>
+    <script src="sdspage.js"></script>
+    <script src="sdspageController.js"></script>
+    <script src="sdspage2DController.js"></script>
+    <script src="precipitation.js"></script>
+    <script src="chroma.js"></script>
+    <script src="solutions.js"></script>
+
+    <link href="default.css" type="text/css" rel="stylesheet">
 </head>
 <body>
 
@@ -29,13 +33,9 @@
         <div id="sdspage2d_ti" class="tabitem">2D SDS-PAGE</div>
     </div>
 
-    <div id="tabs" class="tabs" ng-controller="SolutionsCtrl">
-
-
-        <div id="solutions_tab" class="tab">
-
+    <div id="tabs" class="tabs">
+        <div id="solutions_tab" class="tab" ng-controller="SolutionsCtrl">
             <div>
-
                 <div class="buttonrow">
                     <button class="actionbutton" id="" ng-click="createNewSolution()">New...</button>
                     <button class="actionbutton" id="" ng-click="saveSolutionsAs()">Save</button>
@@ -104,7 +104,7 @@
 
         </div>
 
-        <div id="precipitation_tab" class="tab">
+        <div id="precipitation_tab" class="tab" ng-controller="PrecipitationCtrl">
 
             <form ng-submit="startPrecipitation()">
                 <p>
@@ -132,7 +132,7 @@
             </form>
         </div>
 
-        <div id="chroma_tab" class="tab">
+        <div id="chroma_tab" class="tab" ng-controller="ChromatographyCtrl">
 
             <div class="buttonrow">
                 <form ng-submit="runChroma()">
@@ -168,7 +168,7 @@
             <canvas class="canvas" id="GelFilterCanvas" width="640" height="480" style="border: 1px; border-color: black; border-style: solid; background-color: #ffffff"></canvas>
         </div>
 
-        <div id="sdspage2d_tab" class="tab">
+        <div id="sdspage2d_tab" class="tab" ng-controller="SDSPAGE2DCtrl">
 
             <div class="buttonrow">
                 <form ng-submit="startSDSPAGE2D()">
@@ -183,7 +183,7 @@
             <canvas class="canvas" id="pageCanvas" width="640" height="480" style="border: 1px; border-color: blue; border-style: solid; background-color: #eeeeff"></canvas>
         </div>
 
-        <div id="sdspage_tab" class="tab">
+        <div id="sdspage_tab" class="tab" ng-controller="SDSPAGECtrl">
 
             <div class="buttonrow">
                 <form ng-submit="addSolutionToPAGE()">
