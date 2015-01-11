@@ -27,7 +27,7 @@ function precipitate(solution, saltCons, tempC) {
     return results;
 }
 
-function PrecipitationCtrl($scope, solutionsService) {
+app.controller('PrecipitationCtrl', function ($scope, solutionsService) {
     $scope.solutions = solutionsService.getAll();
 
     $scope.startPrecipitation = function() {
@@ -49,4 +49,4 @@ function PrecipitationCtrl($scope, solutionsService) {
         $scope.precResult2 = null;
         $scope.enablePrecSave = false;
     }
-}
+});

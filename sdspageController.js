@@ -1,6 +1,6 @@
-function SDSPAGECtrl($scope, solutionsService) {
+app.controller('SDSPAGECtrl', function ($scope, solutionsService) {
 	$scope.solutions = solutionsService.getAll();
-    $scope.SDSPageSolutions = [];
+    $scope.SDSPageSolutions = [$scope.solutions[0]];
 
     $scope.addSolutionToPAGE = function () {
         if ($scope.SDSPageSolutions.length < 10) {
@@ -18,5 +18,5 @@ function SDSPAGECtrl($scope, solutionsService) {
             });
         });
     }
-
 }
+);

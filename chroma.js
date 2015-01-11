@@ -6,7 +6,7 @@ function NormalDistr(x,u,variance)
     return 1.0/(sd*Math.sqrt(2*Math.PI))*Math.pow(Math.E, -0.5*Math.pow((x-u)/sd,2));
 }
 
-function ChromatographyCtrl($scope, solutionsService) {
+app.controller('ChromatographyCtrl', function ($scope, solutionsService) {
     $scope.solutions = solutionsService.getAll();
 
     $scope.resins = [
@@ -146,3 +146,4 @@ function ChromatographyCtrl($scope, solutionsService) {
     }
 
 }
+);

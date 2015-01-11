@@ -1,4 +1,4 @@
-var app = angular.module('protlabApp', [])
+var app = angular.module('protlabApp', ['localytics.directives'])
     .service('solutionsService', function () {
         var solutions = [
         { code: 'P1', description: '10 proteins', volume: 0.2, solutes: [

@@ -1,4 +1,4 @@
-function SDSPAGE2DCtrl($scope, solutionsService) {
+app.controller('SDSPAGE2DCtrl', function ($scope, solutionsService) {
 	$scope.solutions = solutionsService.getAll();
 
     $scope.startSDSPAGE2D = function() {
@@ -15,3 +15,4 @@ function SDSPAGE2DCtrl($scope, solutionsService) {
             });
     }
 }
+);
