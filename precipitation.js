@@ -26,3 +26,27 @@ function precipitate(solution, saltCons, tempC) {
 
     return results;
 }
+
+app.controller('PrecipitationCtrl', function ($scope, solutionsService) {
+    $scope.solutions = solutionsService.getAll();
+
+    $scope.startPrecipitation = function() {
+        $scope.enablePrecSave = false;
+        var result = precipitate($scope.selectedPrecSolution, $scope.saltConcentration, 25);
+
+        if(result.length == 2)
+        {
+            $scope.precResult1 = result[0];
+            $scope.precResult2 = result[1];
+            $scope.enablePrecSave = true;
+        }
+    }
+
+    $scope.savePrecResults = function() {
+        $scope.solutions.push($scope.precResult1);
+        $scope.solutions.push($scope.precResult2);
+        $scope.precResult1 = null;
+        $scope.precResult2 = null;
+        $scope.enablePrecSave = false;
+    }
+});
